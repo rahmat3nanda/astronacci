@@ -8,9 +8,19 @@
  */
 
 class AppString {
+  static AppStringCache cache = AppStringCache();
+  static AppStringRemote remote = AppStringRemote();
   static const packageName = "id.nesd.astronacci";
   static const appName = "Astronacci";
   static const tagline = "";
   static const versionName = "1.0.0";
   static const versionCode = 1;
+}
+
+class AppStringCache {
+  final String user = "user";
+}
+
+class AppStringRemote {
+  final String users = "users";
 }

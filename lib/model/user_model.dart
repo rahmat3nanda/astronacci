@@ -12,11 +12,11 @@ class UserModel {
   final String? email;
   final String? fullName;
   final String? religion;
-  final String? gender;
+  final UserGenderModel? gender;
   final String? birthPlace;
-  final String? birthDate;
-  final String? createdAt;
-  final String? updatedAt;
+  final DateTime? birthDate;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
 
   UserModel({
     required this.uid,
@@ -35,7 +35,7 @@ class UserModel {
         email: json["email"],
         fullName: json["full_name"],
         religion: json["religion"],
-        gender: json["gender"],
+        gender: UserGenderModel.fromCode(json["gender"]),
         birthPlace: json["birth_place"],
         birthDate: json["birth_date"],
         createdAt: json["created_at"],
@@ -47,10 +47,37 @@ class UserModel {
         "email": email,
         "full_name": fullName,
         "religion": religion,
-        "gender": gender,
+        "gender": gender?.code,
         "birth_place": birthPlace,
         "birth_date": birthDate,
         "created_at": createdAt,
         "updated_at": updatedAt,
       };
+}
+
+enum UserGenderModel {
+  male("M"),
+  female("F");
+
+  final String code;
+
+  const UserGenderModel(this.code);
+
+  static UserGenderModel? fromCode(String? s) {
+    for (var value in values) {
+      if (value.code == s) {
+        return value;
+      }
+    }
+    return null;
+  }
+
+  String? str() {
+    switch (this) {
+      case UserGenderModel.male:
+        return "Male";
+      case UserGenderModel.female:
+        return "Female";
+    }
+  }
 }
