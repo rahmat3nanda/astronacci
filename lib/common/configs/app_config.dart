@@ -20,16 +20,13 @@ class AppConfig {
   static AppConfig get shared => _config ??= AppConfig._internal();
 
   late AppScheme scheme;
-  late String baseUrlApi;
   late AppVersionModel version;
 
   void initialize({
     required AppScheme scheme,
-    required String baseUrlApi,
     required AppVersionModel version,
   }) {
     this.scheme = scheme;
-    this.baseUrlApi = baseUrlApi;
     this.version = version;
   }
 }
