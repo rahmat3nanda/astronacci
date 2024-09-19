@@ -174,6 +174,7 @@ class _RegisterPageState extends State<RegisterPage> {
         if (s is AuthRegisterSuccessState) {
           _isLoading = false;
           _helper.showToast("Success Sign up. Please check your inbox");
+          _setupForm();
         } else if (s is AuthRegisterFailedState) {
           _isLoading = false;
           _helper.showToast("Failure Sign up.\n${s.data.message}");
