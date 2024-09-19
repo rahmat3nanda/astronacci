@@ -10,7 +10,7 @@
 import 'package:astronacci/bloc/auth/auth_bloc.dart';
 import 'package:astronacci/common/constants.dart';
 import 'package:astronacci/model/app/singleton_model.dart';
-import 'package:astronacci/page/login_page.dart';
+import 'package:astronacci/page/auth/login_page.dart';
 import 'package:astronacci/page/main_page.dart';
 import 'package:astronacci/tool/helper.dart';
 import 'package:flutter/material.dart';

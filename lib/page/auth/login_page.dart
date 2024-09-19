@@ -1,9 +1,9 @@
 /*
  * *
  *  * login_page.dart - astronacci
- *  * Created by Rahmat Trinanda (rahmat3nanda@gmail.com) on 09/19/2024, 02:59
+ *  * Created by Rahmat Trinanda (rahmat3nanda@gmail.com) on 09/19/2024, 17:39
  *  * Copyright (c) 2024 . All rights reserved.
- *  * Last modified 09/19/2024, 02:59
+ *  * Last modified 09/19/2024, 16:18
  *  
  */
 
@@ -11,9 +11,9 @@ import 'package:astronacci/bloc/auth/auth_bloc.dart';
 import 'package:astronacci/common/constants.dart';
 import 'package:astronacci/common/styles.dart';
 import 'package:astronacci/model/app/singleton_model.dart';
+import 'package:astronacci/page/auth/register_page.dart';
 import 'package:astronacci/page/main_page.dart';
-import 'package:astronacci/page/register_page.dart';
-import 'package:astronacci/page/reset_password_page.dart';
+import 'package:astronacci/page/auth/reset_password_page.dart';
 import 'package:astronacci/tool/helper.dart';
 import 'package:astronacci/widget/button_widget.dart';
 import 'package:astronacci/widget/loading_overlay.dart';
