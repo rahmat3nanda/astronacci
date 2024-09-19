@@ -7,6 +7,8 @@
  *
  */
 
+import 'dart:convert';
+
 import 'package:astronacci/model/response_model.dart';
 import 'package:astronacci/tool/helper.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -37,14 +39,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     try {
       User? current = FirebaseAuth.instance.currentUser;
 
-      Map<String, dynamic>? map = await RCache.credentials.readMap(
+      String? s = await RCache.credentials.readString(
         key: RCacheKey(AppString.cache.user),
       );
 
-      UserModel? user;
-      if (map != null) {
-        user = UserModel.fromJson(map);
-      }
+      Map<String, dynamic>? map = s == null ? null : jsonDecode(s);
+
+      UserModel? user = map == null ? null : UserModel.fromJson(map);
 
       if (current?.uid != user?.uid) {
         user = null;
@@ -77,8 +78,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           .get();
 
       UserModel user = UserModel.fromJson(map.data()!);
-      await RCache.credentials.saveMap(
-        user.toJson(),
+      await RCache.credentials.saveString(
+        jsonEncode(user.toJson()),
         key: RCacheKey(AppString.cache.user),
       );
 
@@ -102,6 +103,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         password: event.password,
       );
 
+      await c.user?.sendEmailVerification();
+
       UserModel user = UserModel(
         uid: c.user!.uid,
         email: event.email,
@@ -110,17 +113,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         gender: event.gender,
         birthPlace: event.birthPlace,
         birthDate: event.birthDate,
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
+        createdAt: c.user?.metadata.creationTime ?? DateTime.now(),
+        updatedAt: c.user?.metadata.creationTime ?? DateTime.now(),
       );
 
       await FirebaseFirestore.instance
           .collection(AppString.remote.users)
           .doc(c.user!.uid)
-          .update(user.toJson());
+          .set(user.toJson());
 
-      await RCache.credentials.saveMap(
-        user.toJson(),
+      await RCache.credentials.saveString(
+        jsonEncode(user.toJson()),
         key: RCacheKey(AppString.cache.user),
       );
 
