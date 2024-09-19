@@ -11,6 +11,7 @@ import 'package:astronacci/common/styles.dart';
 import 'package:astronacci/dialog/app_alert_dialog.dart';
 import 'package:astronacci/model/app/button_action_model.dart';
 import 'package:astronacci/model/app/singleton_model.dart';
+import 'package:astronacci/page/profile/profile_list_page.dart';
 import 'package:astronacci/tool/helper.dart';
 import 'package:astronacci/widget/loading_overlay.dart';
 import 'package:flutter/material.dart';
@@ -26,6 +27,7 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage>
     with SingleTickerProviderStateMixin {
   late Helper _helper;
+  late ScrollController _sController;
   late TabController _tabController;
   late bool _isLoading;
   late int _page;
@@ -35,6 +37,7 @@ class _MainPageState extends State<MainPage>
     super.initState();
     SingletonModel.withContext(context);
     _helper = Helper();
+    _sController = ScrollController();
     _tabController = TabController(length: 2, vsync: this);
     _tabController.addListener(() {
       setState(() {
@@ -52,6 +55,14 @@ class _MainPageState extends State<MainPage>
   }
 
   void _onPageChanged(int i) {
+    if (_page == 0 && i == _page) {
+      _sController.animateTo(
+        0,
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeIn,
+      );
+      return;
+    }
     setState(() {
       _page = i;
       _tabController.animateTo(i);
@@ -119,8 +130,8 @@ class _MainPageState extends State<MainPage>
           child: TabBarView(
             controller: _tabController,
             children: [
-              Container(),
-              Container(),
+              ProfileListPage(scrollController: _sController),
+              Container()
             ],
           ),
         ),
