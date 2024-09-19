@@ -7,6 +7,9 @@
  *
  */
 
+import 'package:astronacci/tool/helper.dart';
+import 'package:intl/intl.dart';
+
 class UserModel {
   final String uid;
   final String? email;
@@ -37,9 +40,15 @@ class UserModel {
         religion: json["religion"],
         gender: UserGenderModel.fromCode(json["gender"]),
         birthPlace: json["birth_place"],
-        birthDate: json["birth_date"],
-        createdAt: json["created_at"],
-        updatedAt: json["updated_at"],
+        birthDate: json["birth_date"] == null
+            ? null
+            : DateTime.tryParse(json["birth_date"]),
+        createdAt: json["created_at"] == null
+            ? null
+            : DateTime.tryParse(json["created_at"]),
+        updatedAt: json["updated_at"] == null
+            ? null
+            : DateTime.tryParse(json["updated_at"]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -49,9 +58,9 @@ class UserModel {
         "religion": religion,
         "gender": gender?.code,
         "birth_place": birthPlace,
-        "birth_date": birthDate,
-        "created_at": createdAt,
-        "updated_at": updatedAt,
+        "birth_date": DateFormat("yyyy-MM-dd hh:mm:ss").tryFormat(birthDate),
+        "created_at": DateFormat("yyyy-MM-dd hh:mm:ss").tryFormat(createdAt),
+        "updated_at": DateFormat("yyyy-MM-dd hh:mm:ss").tryFormat(updatedAt),
       };
 }
 
