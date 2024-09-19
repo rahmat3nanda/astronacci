@@ -11,6 +11,7 @@ import 'dart:convert';
 
 import 'package:astronacci/model/response_model.dart';
 import 'package:astronacci/tool/helper.dart';
+import 'package:astronacci/tool/user_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -47,6 +48,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       Map<String, dynamic>? map = s == null ? null : jsonDecode(s);
 
       UserModel? user = map == null ? null : UserModel.fromJson(map);
+      user?.imageUrl = await UserImage.shared.image(user.images ?? "");
 
       if (current?.uid != user?.uid) {
         user = null;
@@ -79,6 +81,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           .get();
 
       UserModel user = UserModel.fromJson(map.data()!);
+      user.imageUrl = await UserImage.shared.image(user.images ?? "");
+
       await RCache.credentials.saveString(
         jsonEncode(user.toJson()),
         key: RCacheKey(AppString.cache.user),
@@ -110,6 +114,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         uid: c.user!.uid,
         email: event.email,
         fullName: event.fullName,
+        images: "user_images/default.jpg",
         religion: event.religion,
         gender: event.gender,
         birthPlace: event.birthPlace,
