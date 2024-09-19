@@ -8,6 +8,7 @@
  */
 
 import 'package:astronacci/bloc/auth/auth_bloc.dart';
+import 'package:astronacci/bloc/profile/profile_bloc.dart';
 import 'package:astronacci/common/configs.dart';
 import 'package:astronacci/common/constants.dart';
 import 'package:astronacci/common/styles.dart';
@@ -51,6 +52,9 @@ class _AppState extends State<App> {
       providers: [
         BlocProvider<AuthBloc>(
           create: (BuildContext context) => AuthBloc(AuthInitialState()),
+        ),
+        BlocProvider<ProfileBloc>(
+          create: (BuildContext context) => ProfileBloc(ProfileInitialState()),
         ),
       ],
       child: MaterialApp(
