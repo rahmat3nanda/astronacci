@@ -31,6 +31,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<AuthLoadEvent>(_load);
     on<AuthLoginEvent>(_login);
     on<AuthRegisterEvent>(_register);
+    on<AuthResetPasswordEvent>(_reset);
     on<AuthLogoutEvent>(_logout);
   }
 
@@ -135,6 +136,16 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       SingletonModel.shared.user = null;
       SingletonModel.shared.isLoggedIn = false;
       state(AuthRegisterFailedState(ResponseModel(code: 401, message: e)));
+    }
+  }
+
+  void _reset(AuthResetPasswordEvent event, Emitter<AuthState> state) async {
+    state(AuthInitialState());
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: event.email);
+      state(const AuthResetPasswordSuccessState());
+    } catch (e) {
+      state(AuthResetPasswordFailedState(ResponseModel(code: 401, message: e)));
     }
   }
 

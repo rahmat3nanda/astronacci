@@ -49,6 +49,16 @@ class AuthRegisterFailedState extends AuthState {
   const AuthRegisterFailedState(this.data);
 }
 
+class AuthResetPasswordSuccessState extends AuthState {
+  const AuthResetPasswordSuccessState();
+}
+
+class AuthResetPasswordFailedState extends AuthState {
+  final ResponseModel data;
+
+  const AuthResetPasswordFailedState(this.data);
+}
+
 class AuthLogoutSuccessState extends AuthState {
   const AuthLogoutSuccessState();
 }

@@ -63,6 +63,17 @@ class AuthRegisterEvent extends AuthEvent {
   }
 }
 
+class AuthResetPasswordEvent extends AuthEvent {
+  final String email;
+
+  const AuthResetPasswordEvent({required this.email});
+
+  @override
+  String toString() {
+    return 'AuthResetPasswordEvent{email: $email}';
+  }
+}
+
 class AuthLogoutEvent extends AuthEvent {
   const AuthLogoutEvent();
 
