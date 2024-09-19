@@ -7,6 +7,8 @@
  *
  */
 
+import 'dart:convert';
+
 import 'package:astronacci/tool/helper.dart';
 import 'package:intl/intl.dart';
 
@@ -14,6 +16,8 @@ class UserModel {
   final String uid;
   final String? email;
   final String? fullName;
+  final String? images;
+  String? imageUrl;
   final String? religion;
   final UserGenderModel? gender;
   final String? birthPlace;
@@ -25,6 +29,8 @@ class UserModel {
     required this.uid,
     this.email,
     this.fullName,
+    this.images,
+    this.imageUrl,
     this.religion,
     this.gender,
     this.birthPlace,
@@ -33,10 +39,16 @@ class UserModel {
     this.updatedAt,
   });
 
+  @override
+  String toString() {
+    return jsonEncode(toJson());
+  }
+
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
         uid: json["uid"],
         email: json["email"],
         fullName: json["full_name"],
+        images: json["images"],
         religion: json["religion"],
         gender: UserGenderModel.fromCode(json["gender"]),
         birthPlace: json["birth_place"],
@@ -55,6 +67,7 @@ class UserModel {
         "uid": uid,
         "email": email,
         "full_name": fullName,
+        "images": images,
         "religion": religion,
         "gender": gender?.code,
         "birth_place": birthPlace,
