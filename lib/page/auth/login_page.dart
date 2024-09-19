@@ -159,7 +159,7 @@ class _LoginPageState extends State<LoginPage> {
             maxLines: 1,
             textInputAction: TextInputAction.next,
             controller: _cEmail,
-            keyboardType: TextInputType.text,
+            keyboardType: TextInputType.emailAddress,
             decoration: const InputDecoration(hintText: "Email"),
           ),
           const SizedBox(height: 12),
