@@ -12,6 +12,7 @@ import 'package:astronacci/dialog/app_alert_dialog.dart';
 import 'package:astronacci/model/app/button_action_model.dart';
 import 'package:astronacci/model/app/singleton_model.dart';
 import 'package:astronacci/page/profile/profile_list_page.dart';
+import 'package:astronacci/page/profile/profile_page.dart';
 import 'package:astronacci/tool/helper.dart';
 import 'package:astronacci/widget/loading_overlay.dart';
 import 'package:flutter/material.dart';
@@ -131,7 +132,7 @@ class _MainPageState extends State<MainPage>
             controller: _tabController,
             children: [
               ProfileListPage(scrollController: _sController),
-              Container()
+              ProfilePage(showLoading: _showLoading),
             ],
           ),
         ),
