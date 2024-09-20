@@ -30,7 +30,6 @@ class ProfileSearchPage extends StatefulWidget {
 }
 
 class _ProfileSearchPageState extends State<ProfileSearchPage> {
-  late SingletonModel _model;
   late ProfileBloc _bloc;
   late Helper _helper;
 
@@ -45,7 +44,7 @@ class _ProfileSearchPageState extends State<ProfileSearchPage> {
   @override
   void initState() {
     super.initState();
-    _model = SingletonModel.withContext(context);
+    SingletonModel.withContext(context);
     _bloc = BlocProvider.of<ProfileBloc>(context);
     _helper = Helper();
     _cRefresh = RefreshController(initialRefresh: false);

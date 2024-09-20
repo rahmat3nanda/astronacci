@@ -11,6 +11,7 @@ import 'package:astronacci/bloc/profile/profile_bloc.dart';
 import 'package:astronacci/common/styles.dart';
 import 'package:astronacci/model/app/singleton_model.dart';
 import 'package:astronacci/model/user_model.dart';
+import 'package:astronacci/page/profile/profile_edit_page.dart';
 import 'package:astronacci/tool/helper.dart';
 import 'package:astronacci/widget/image_network_widget.dart';
 import 'package:flutter/material.dart';
@@ -61,6 +62,11 @@ class _ProfileDetailPageState extends State<ProfileDetailPage> {
     _bloc.add(ProfileDetailEvent(_data.uid));
   }
 
+  void _onEdit() async {
+    await _helper.jumpToPage(context, page: ProfileEditPage());
+    _onRefresh();
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocListener(
@@ -88,7 +94,7 @@ class _ProfileDetailPageState extends State<ProfileDetailPage> {
               actions: [
                 if (_data.uid == _model.user?.uid)
                   IconButton(
-                    onPressed: () {}, //TODO: Routing
+                    onPressed: _onEdit,
                     icon: const Icon(Icons.edit),
                   ),
               ],
@@ -156,7 +162,7 @@ class _ProfileDetailPageState extends State<ProfileDetailPage> {
           onTap: () => _helper.launch("mailto:${_data.email}"),
         ),
         _itemView(title: "Birth Place", value: _data.birthPlace),
-        _itemView(title: "Religion", value: _data.religion),
+        _itemView(title: "Religion", value: _data.religion?.name),
       ],
     );
   }

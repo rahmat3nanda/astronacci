@@ -14,6 +14,7 @@ import 'package:astronacci/model/app/singleton_model.dart';
 import 'package:astronacci/model/user_model.dart';
 import 'package:astronacci/page/auth/login_page.dart';
 import 'package:astronacci/page/profile/profile_detail_page.dart';
+import 'package:astronacci/page/profile/profile_edit_page.dart';
 import 'package:astronacci/tool/helper.dart';
 import 'package:astronacci/widget/button_widget.dart';
 import 'package:astronacci/widget/image_network_widget.dart';
@@ -77,6 +78,11 @@ class _ProfilePageState extends State<ProfilePage> {
     _onRefresh();
   }
 
+  void _onEdit() async {
+    await _helper.jumpToPage(context, page: ProfileEditPage());
+    _onRefresh();
+  }
+
   void _onLogout() {
     widget.showLoading(true);
     _authBloc.add(const AuthLogoutEvent());
@@ -124,7 +130,7 @@ class _ProfilePageState extends State<ProfilePage> {
               title: const Text("Profile"),
               actions: [
                 IconButton(
-                  onPressed: () {}, //TODO: Routing
+                  onPressed: _onEdit,
                   icon: const Icon(Icons.edit),
                 ),
               ],
