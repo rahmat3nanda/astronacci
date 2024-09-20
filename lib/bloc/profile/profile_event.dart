@@ -7,6 +7,7 @@
  *  
  */
 
+import 'package:astronacci/model/user_model.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class ProfileEvent extends Equatable {
@@ -37,5 +38,16 @@ class ProfileDetailEvent extends ProfileEvent {
   @override
   String toString() {
     return 'ProfileDetailEvent{uid: $uid}';
+  }
+}
+
+class ProfileEditEvent extends ProfileEvent {
+  final UserModel data;
+
+  const ProfileEditEvent(this.data);
+
+  @override
+  String toString() {
+    return 'ProfileEditEvent{data: $data}';
   }
 }

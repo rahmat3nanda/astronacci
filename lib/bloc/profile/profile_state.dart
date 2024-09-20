@@ -56,3 +56,13 @@ class ProfileDetailFailedState extends ProfileState {
 
   const ProfileDetailFailedState({required this.data, required this.uid});
 }
+
+class ProfileEditSuccessState extends ProfileState {
+  const ProfileEditSuccessState();
+}
+
+class ProfileEditFailedState extends ProfileState {
+  final ResponseModel data;
+
+  const ProfileEditFailedState(this.data);
+}

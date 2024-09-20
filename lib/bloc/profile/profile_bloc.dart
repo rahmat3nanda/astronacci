@@ -7,14 +7,18 @@
  *
  */
 
+import 'dart:convert';
+
 import 'package:astronacci/bloc/profile/profile_event.dart';
 import 'package:astronacci/bloc/profile/profile_state.dart';
 import 'package:astronacci/common/constants.dart';
+import 'package:astronacci/model/app/singleton_model.dart';
 import 'package:astronacci/model/response_model.dart';
 import 'package:astronacci/model/user_model.dart';
 import 'package:astronacci/tool/user_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rcache_flutter/rcache.dart';
 
 export 'package:astronacci/bloc/profile/profile_event.dart';
 export 'package:astronacci/bloc/profile/profile_state.dart';
@@ -25,6 +29,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   ProfileBloc(ProfileInitialState super.initialState) {
     on<ProfileListEvent>(_list);
     on<ProfileDetailEvent>(_detail);
+    on<ProfileEditEvent>(_edit);
   }
 
   void _list(ProfileListEvent event, Emitter<ProfileState> state) async {
@@ -96,6 +101,30 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         data: ResponseModel(code: 404, message: e),
         uid: event.uid,
       ));
+    }
+  }
+
+  void _edit(ProfileEditEvent event, Emitter<ProfileState> state) async {
+    state(ProfileInitialState());
+    try {
+      UserModel user = event.data;
+      user.updatedAt = DateTime.now();
+
+      await FirebaseFirestore.instance
+          .collection(AppString.remote.users)
+          .doc(user.uid)
+          .set(user.toJson());
+
+      await RCache.credentials.saveString(
+        jsonEncode(user.toJson()),
+        key: RCacheKey(AppString.cache.user),
+      );
+
+      SingletonModel.shared.user = user;
+
+      state(const ProfileEditSuccessState());
+    } catch (e) {
+      state(ProfileEditFailedState(ResponseModel(code: 401, message: e)));
     }
   }
 }
