@@ -173,6 +173,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
             maxLines: 1,
             textInputAction: TextInputAction.next,
             controller: _cEmail,
+            enabled: false,
             keyboardType: TextInputType.text,
             decoration: const InputDecoration(
               labelText: "Email",
@@ -256,6 +257,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
           const SizedBox(height: 12),
           TextFormField(
             maxLines: 1,
+            enabled: false,
             textInputAction: TextInputAction.done,
             textCapitalization: TextCapitalization.words,
             controller: _cBirthDate,
