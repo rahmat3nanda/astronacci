@@ -39,7 +39,7 @@ class _RegisterPageState extends State<RegisterPage> {
   late TextEditingController _cPassword;
   late TextEditingController _cPasswordConfirm;
   late TextEditingController _cFullName;
-  String? _religion;
+  UserReligionModel? _religion;
   UserGenderModel? _gender;
   late TextEditingController _cBirthPlace;
   late TextEditingController _cBirthDate;
@@ -132,7 +132,7 @@ class _RegisterPageState extends State<RegisterPage> {
       return;
     }
 
-    if (_religion?.isEmpty ?? true) {
+    if (_religion == null) {
       _helper.showToast("Religion cannot be empty!");
       return;
     }
@@ -317,7 +317,7 @@ class _RegisterPageState extends State<RegisterPage> {
             ),
           ),
           const SizedBox(height: 12),
-          DropdownSearch<String>(
+          DropdownSearch<UserReligionModel>(
             dropdownDecoratorProps: const DropDownDecoratorProps(
               dropdownSearchDecoration: InputDecoration(
                 labelText: "Religion",
@@ -328,16 +328,8 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
             ),
             selectedItem: _religion,
-            items: const [
-              "Islam",
-              "Christian",
-              "Catholic",
-              "Hindu",
-              "Buddhist",
-              "Confucian",
-              "Others"
-            ],
-            itemAsString: (r) => r,
+            items: UserReligionModel.values,
+            itemAsString: (r) => r.name,
             onChanged: (r) => setState(() {
               _religion = r;
             }),

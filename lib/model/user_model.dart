@@ -15,15 +15,15 @@ import 'package:intl/intl.dart';
 class UserModel {
   final String uid;
   final String? email;
-  final String? fullName;
+  String? fullName;
   final String? images;
   String? imageUrl;
-  final String? religion;
-  final UserGenderModel? gender;
-  final String? birthPlace;
+  UserReligionModel? religion;
+  UserGenderModel? gender;
+  String? birthPlace;
   final DateTime? birthDate;
   final DateTime? createdAt;
-  final DateTime? updatedAt;
+  DateTime? updatedAt;
 
   UserModel({
     required this.uid,
@@ -49,7 +49,7 @@ class UserModel {
         email: json["email"],
         fullName: json["full_name"],
         images: json["images"],
-        religion: json["religion"],
+        religion: UserReligionModel.fromName(json["religion"]),
         gender: UserGenderModel.fromCode(json["gender"]),
         birthPlace: json["birth_place"],
         birthDate: json["birth_date"] == null
@@ -68,7 +68,7 @@ class UserModel {
         "email": email,
         "full_name": fullName,
         "images": images,
-        "religion": religion,
+        "religion": religion?.name,
         "gender": gender?.code,
         "birth_place": birthPlace,
         "birth_date": DateFormat("yyyy-MM-dd hh:mm:ss").tryFormat(birthDate),
@@ -101,5 +101,28 @@ enum UserGenderModel {
       case UserGenderModel.female:
         return "Female";
     }
+  }
+}
+
+enum UserReligionModel {
+  islam("Islam"),
+  christian("Christian"),
+  catholic("Catholic"),
+  hindu("Hindu"),
+  buddhist("Buddhist"),
+  confucian("Confucian"),
+  others("Others");
+
+  final String name;
+
+  const UserReligionModel(this.name);
+
+  static UserReligionModel? fromName(String? s) {
+    for (var value in values) {
+      if (value.name == s) {
+        return value;
+      }
+    }
+    return null;
   }
 }

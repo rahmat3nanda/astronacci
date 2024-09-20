@@ -42,7 +42,7 @@ class AuthRegisterEvent extends AuthEvent {
   final String email;
   final String password;
   final String fullName;
-  final String religion;
+  final UserReligionModel religion;
   final UserGenderModel gender;
   final String birthPlace;
   final DateTime birthDate;
