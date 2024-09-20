@@ -12,6 +12,7 @@ import 'package:astronacci/common/styles.dart';
 import 'package:astronacci/model/app/singleton_model.dart';
 import 'package:astronacci/model/error_model.dart';
 import 'package:astronacci/model/user_model.dart';
+import 'package:astronacci/page/profile/profile_detail_page.dart';
 import 'package:astronacci/tool/helper.dart';
 import 'package:astronacci/widget/image_network_widget.dart';
 import 'package:astronacci/widget/reload_data_widget.dart';
@@ -30,7 +31,6 @@ class ProfileListPage extends StatefulWidget {
 }
 
 class _ProfileListPageState extends State<ProfileListPage> {
-
   late Helper _helper;
   late ProfileBloc _bloc;
 
@@ -43,7 +43,7 @@ class _ProfileListPageState extends State<ProfileListPage> {
   @override
   void initState() {
     super.initState();
-     SingletonModel.withContext(context);
+    SingletonModel.withContext(context);
     _helper = Helper();
     _bloc = BlocProvider.of<ProfileBloc>(context);
     _cRefresh = RefreshController(initialRefresh: false);
@@ -184,7 +184,15 @@ class _ProfileListPageState extends State<ProfileListPage> {
           child: InkWell(
             splashColor: AppColor.secondary,
             borderRadius: BorderRadius.circular(12),
-            onTap: () {}, // TODO: Routing
+            onTap: () => _helper.jumpToPage(
+              context,
+              page: ProfileDetailPage(
+                user: d,
+                onUserUpdated: (u) => setState(() {
+                  _data![i] = u;
+                }),
+              ),
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

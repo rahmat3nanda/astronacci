@@ -13,6 +13,7 @@ import 'package:astronacci/common/styles.dart';
 import 'package:astronacci/model/app/singleton_model.dart';
 import 'package:astronacci/model/user_model.dart';
 import 'package:astronacci/page/auth/login_page.dart';
+import 'package:astronacci/page/profile/profile_detail_page.dart';
 import 'package:astronacci/tool/helper.dart';
 import 'package:astronacci/widget/button_widget.dart';
 import 'package:astronacci/widget/image_network_widget.dart';
@@ -65,6 +66,17 @@ class _ProfilePageState extends State<ProfilePage> {
     _profileBloc.add(ProfileDetailEvent(_model.user?.uid ?? ""));
   }
 
+  void _toDetail() async {
+    await _helper.jumpToPage(
+      context,
+      page: ProfileDetailPage(
+        user: _model.user!,
+        onUserUpdated: (_) {},
+      ),
+    );
+    _onRefresh();
+  }
+
   void _onLogout() {
     widget.showLoading(true);
     _authBloc.add(const AuthLogoutEvent());
@@ -108,7 +120,15 @@ class _ProfilePageState extends State<ProfilePage> {
         bloc: _profileBloc,
         builder: (c, s) {
           return Scaffold(
-            appBar: AppBar(title: const Text("Profile")),
+            appBar: AppBar(
+              title: const Text("Profile"),
+              actions: [
+                IconButton(
+                  onPressed: () {}, //TODO: Routing
+                  icon: const Icon(Icons.edit),
+                ),
+              ],
+            ),
             body: SafeArea(
               child: SmartRefresher(
                 enablePullDown: !_onLoad,
@@ -132,46 +152,10 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Widget _mainView() {
-    UserModel? d = _model.user;
-    DateTime now = DateTime.now();
-    DateTime bd = d?.birthDate ?? now;
-    int yo = now.year - bd.year - 1;
-    if (bd.month - now.month <= 0) {
-      if (bd.day - now.day <= 0) {
-        yo += 1;
-      }
-    }
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        Align(
-          alignment: Alignment.center,
-          child: ImageNetworkWidget(
-            width: 108,
-            height: 108,
-            border: Border.all(color: AppColor.primary, width: 4),
-            fit: BoxFit.scaleDown,
-            shape: BoxShape.circle,
-            url: d?.imageUrl ?? "",
-          ),
-        ),
-        const SizedBox(height: 16),
-        Text(
-          d?.fullName ?? "-",
-          textAlign: TextAlign.center,
-          style: const TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-        Text(
-          d?.gender?.name.toUpperCase() ?? "-",
-          textAlign: TextAlign.center,
-        ),
-        Text(
-          "$yo y.o",
-          textAlign: TextAlign.center,
-        ),
+        _profileView(),
         const SizedBox(height: 16),
         Divider(color: Colors.grey.shade300),
         const SizedBox(height: 16),
@@ -190,6 +174,45 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _profileView() {
+    UserModel? d = _model.user;
+    return InkWell(
+      onTap: _toDetail,
+      child: Column(
+        children: [
+          Align(
+            alignment: Alignment.center,
+            child: ImageNetworkWidget(
+              width: 108,
+              height: 108,
+              border: Border.all(color: AppColor.primary, width: 4),
+              fit: BoxFit.scaleDown,
+              shape: BoxShape.circle,
+              url: d?.imageUrl ?? "",
+            ),
+          ),
+          const SizedBox(height: 16),
+          Text(
+            d?.fullName ?? "-",
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          Text(
+            d?.gender?.name.toUpperCase() ?? "-",
+            textAlign: TextAlign.center,
+          ),
+          Text(
+            "${d?.birthDate.age} y.o",
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
     );
   }
 }
