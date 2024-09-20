@@ -259,7 +259,10 @@ class _RegisterPageState extends State<RegisterPage> {
             textInputAction: TextInputAction.next,
             controller: _cEmail,
             keyboardType: TextInputType.text,
-            decoration: const InputDecoration(hintText: "Email"),
+            decoration: const InputDecoration(
+              labelText: "Email",
+              hintText: "Email",
+            ),
           ),
           const SizedBox(height: 12),
           TextFormField(
@@ -269,6 +272,7 @@ class _RegisterPageState extends State<RegisterPage> {
             keyboardType: TextInputType.text,
             obscureText: _obscure,
             decoration: InputDecoration(
+              labelText: "Password",
               hintText: "Password",
               suffixIcon: IconButton(
                 icon: Icon(
@@ -288,6 +292,7 @@ class _RegisterPageState extends State<RegisterPage> {
             keyboardType: TextInputType.text,
             obscureText: _obscureConfirm,
             decoration: InputDecoration(
+              labelText: "Retype Password",
               hintText: "Retype Password",
               suffixIcon: IconButton(
                 icon: Icon(
@@ -306,12 +311,16 @@ class _RegisterPageState extends State<RegisterPage> {
             textCapitalization: TextCapitalization.words,
             controller: _cFullName,
             keyboardType: TextInputType.name,
-            decoration: const InputDecoration(hintText: "Full Name"),
+            decoration: const InputDecoration(
+              labelText: "Full Name",
+              hintText: "Full Name",
+            ),
           ),
           const SizedBox(height: 12),
           DropdownSearch<String>(
             dropdownDecoratorProps: const DropDownDecoratorProps(
               dropdownSearchDecoration: InputDecoration(
+                labelText: "Religion",
                 hintText: "Religion",
                 contentPadding: EdgeInsets.symmetric(
                   horizontal: 24.0,
@@ -372,7 +381,10 @@ class _RegisterPageState extends State<RegisterPage> {
             textCapitalization: TextCapitalization.words,
             controller: _cBirthPlace,
             keyboardType: TextInputType.text,
-            decoration: const InputDecoration(hintText: "Birth Place"),
+            decoration: const InputDecoration(
+              labelText: "Birth Place",
+              hintText: "Birth Place",
+            ),
           ),
           const SizedBox(height: 12),
           TextFormField(
@@ -389,7 +401,10 @@ class _RegisterPageState extends State<RegisterPage> {
                 _cBirthDate.text = DateFormat("yyyy-MM-dd").format(d);
               }),
             ),
-            decoration: const InputDecoration(hintText: "Birth Date"),
+            decoration: const InputDecoration(
+              labelText: "Birth Date",
+              hintText: "Birth Date",
+            ),
           ),
           const SizedBox(height: 22),
           ButtonWidget(

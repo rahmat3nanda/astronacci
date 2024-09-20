@@ -162,7 +162,10 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
             textInputAction: TextInputAction.next,
             controller: _cEmail,
             keyboardType: TextInputType.text,
-            decoration: const InputDecoration(hintText: "Email"),
+            decoration: const InputDecoration(
+              labelText: "Email",
+              hintText: "Email",
+            ),
           ),
           const SizedBox(height: 22),
           ButtonWidget(

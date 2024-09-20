@@ -160,7 +160,10 @@ class _LoginPageState extends State<LoginPage> {
             textInputAction: TextInputAction.next,
             controller: _cEmail,
             keyboardType: TextInputType.emailAddress,
-            decoration: const InputDecoration(hintText: "Email"),
+            decoration: const InputDecoration(
+              hintText: "Email",
+              labelText: "Email",
+            ),
           ),
           const SizedBox(height: 12),
           TextFormField(
@@ -170,6 +173,7 @@ class _LoginPageState extends State<LoginPage> {
             keyboardType: TextInputType.text,
             obscureText: _obscure,
             decoration: InputDecoration(
+              labelText: "Password",
               hintText: "Password",
               suffixIcon: IconButton(
                 icon: Icon(
