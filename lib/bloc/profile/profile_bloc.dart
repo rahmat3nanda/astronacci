@@ -85,7 +85,10 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
       state(ProfileDetailSuccessState(user));
     } catch (e) {
-      state(ProfileDetailFailedState(ResponseModel(code: 404, message: e)));
+      state(ProfileDetailFailedState(
+        data: ResponseModel(code: 404, message: e),
+        uid: event.uid,
+      ));
     }
   }
 }
