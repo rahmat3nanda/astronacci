@@ -23,15 +23,25 @@ class ProfileInitialState extends ProfileState {}
 class ProfileListSuccessState extends ProfileState {
   final List<UserModel> data;
   final int page;
+  final String name;
 
-  const ProfileListSuccessState({required this.data, required this.page});
+  const ProfileListSuccessState({
+    required this.data,
+    required this.page,
+    required this.name,
+  });
 }
 
 class ProfileListFailedState extends ProfileState {
   final ResponseModel data;
   final int page;
+  final String name;
 
-  const ProfileListFailedState({required this.data, required this.page});
+  const ProfileListFailedState({
+    required this.data,
+    required this.page,
+    required this.name,
+  });
 }
 
 class ProfileDetailSuccessState extends ProfileState {

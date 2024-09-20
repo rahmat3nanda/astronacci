@@ -19,12 +19,13 @@ abstract class ProfileEvent extends Equatable {
 class ProfileListEvent extends ProfileEvent {
   final int page;
   final int size;
+  final String name;
 
-  const ProfileListEvent({required this.page, this.size = 10});
+  const ProfileListEvent({required this.page, this.size = 10, this.name = ""});
 
   @override
   String toString() {
-    return 'ProfileListEvent{page: $page, size: $size}';
+    return 'ProfileListEvent{page: $page, size: $size, name: $name}';
   }
 }
 

@@ -36,8 +36,13 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
       Query<Map<String, dynamic>> query = FirebaseFirestore.instance
           .collection(AppString.remote.users)
-          .orderBy("uid")
           .limit(event.size);
+
+      if (event.name.isNotEmpty) {
+        query = query
+            .where("full_name", isGreaterThanOrEqualTo: event.name)
+            .where("full_name", isLessThan: '${event.name}\uf8ff');
+      }
 
       if (_lastDocument != null) {
         query = query.startAfterDocument(_lastDocument!);
@@ -56,7 +61,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
       AppLog.print(data);
 
-      state(ProfileListSuccessState(data: data, page: event.page));
+      state(ProfileListSuccessState(
+          data: data, page: event.page, name: event.name));
     } catch (e) {
       AppLog.print(e);
       state(ProfileListFailedState(
@@ -65,6 +71,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           message: e,
         ),
         page: event.page,
+        name: event.name,
       ));
     }
   }
