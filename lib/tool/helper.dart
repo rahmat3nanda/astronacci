@@ -14,6 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Helper {
   Future exitApp() {
@@ -76,6 +77,16 @@ class Helper {
       textColor: textColor ?? Colors.white,
       fontSize: size ?? 16.0,
     );
+  }
+
+  Future<void> launch(String url, {Function()? onError}) async {
+    if (!await launchUrl(Uri.parse(url))) {
+      if (onError != null) {
+        onError();
+        return;
+      }
+      throw Exception('Could not launch $url');
+    }
   }
 
   Future destroySession() async {
@@ -161,5 +172,24 @@ extension IndexWhereExt<T> on List<T> {
       if (test(this[i])) return i;
     }
     return null;
+  }
+}
+
+extension DateTimeAge on DateTime? {
+  int get age {
+    if (this == null) {
+      return 0;
+    }
+
+    DateTime now = DateTime.now();
+    DateTime bd = this!;
+    int yo = now.year - bd.year - 1;
+    if (bd.month - now.month <= 0) {
+      if (bd.day - now.day <= 0) {
+        yo += 1;
+      }
+    }
+
+    return yo;
   }
 }
