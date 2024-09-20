@@ -1,19 +1,19 @@
 /*
  * *
- *  * profile_list_page.dart - astronacci
- *  * Created by Rahmat Trinanda (rahmat3nanda@gmail.com) on 09/19/2024, 18:10
+ *  * profile_search_page.dart - astronacci
+ *  * Created by Rahmat Trinanda (rahmat3nanda@gmail.com) on 09/20/2024, 12:41
  *  * Copyright (c) 2024 . All rights reserved.
- *  * Last modified 09/19/2024, 18:10
+ *  * Last modified 09/20/2024, 12:41
  *  
  */
 
 import 'package:astronacci/bloc/profile/profile_bloc.dart';
+import 'package:astronacci/common/constants.dart';
 import 'package:astronacci/common/styles.dart';
 import 'package:astronacci/model/app/singleton_model.dart';
 import 'package:astronacci/model/error_model.dart';
 import 'package:astronacci/model/user_model.dart';
 import 'package:astronacci/page/profile/profile_detail_page.dart';
-import 'package:astronacci/page/profile/profile_search_page.dart';
 import 'package:astronacci/tool/helper.dart';
 import 'package:astronacci/widget/image_network_widget.dart';
 import 'package:astronacci/widget/reload_data_widget.dart';
@@ -22,55 +22,70 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-class ProfileListPage extends StatefulWidget {
-  final ScrollController? scrollController;
-
-  const ProfileListPage({super.key, this.scrollController});
+class ProfileSearchPage extends StatefulWidget {
+  const ProfileSearchPage({super.key});
 
   @override
-  State<ProfileListPage> createState() => _ProfileListPageState();
+  State<ProfileSearchPage> createState() => _ProfileSearchPageState();
 }
 
-class _ProfileListPageState extends State<ProfileListPage> {
-  late Helper _helper;
+class _ProfileSearchPageState extends State<ProfileSearchPage> {
+  late SingletonModel _model;
   late ProfileBloc _bloc;
+  late Helper _helper;
 
   late RefreshController _cRefresh;
+  late TextEditingController _cSearch;
   late int _page;
   List<UserModel>? _data;
+  String? _lastQuery;
   ErrorModel? _error;
   late bool _onLoad;
-  late bool _onSearch;
 
   @override
   void initState() {
     super.initState();
-    SingletonModel.withContext(context);
-    _helper = Helper();
+    _model = SingletonModel.withContext(context);
     _bloc = BlocProvider.of<ProfileBloc>(context);
+    _helper = Helper();
     _cRefresh = RefreshController(initialRefresh: false);
+    _cSearch = TextEditingController();
     _page = 0;
     _onLoad = false;
-    _onSearch = false;
-    _onRefresh();
   }
 
-  void _onRefresh() {
-    _page = 0;
-    _onLoad = true;
-    _getData(_page);
-    _cRefresh.refreshCompleted();
-  }
-
-  void _getData(int page) {
+  void _search(_SearchType type) {
     _error = null;
-    _bloc.add(ProfileListEvent(page: page));
-  }
+    String s = _cSearch.text.trim();
+    if (s.isEmpty) {
+      setState(() {
+        _data = null;
+        _lastQuery = null;
+      });
+      return;
+    }
 
-  void _search() async {
-    _onSearch = true;
-    await _helper.jumpToPage(context, page: const ProfileSearchPage());
-    _onSearch = false;
+    switch (type) {
+      case _SearchType.reset:
+        _page = 0;
+      case _SearchType.current:
+        break;
+      case _SearchType.next:
+        _page += 1;
+    }
+
+    AppLog.print("njayyy $_page");
+
+    if (_lastQuery != s) {
+      _lastQuery = s;
+    }
+
+    if (_page == 0) {
+      _onLoad = true;
+    }
+
+    _cRefresh.refreshCompleted();
+    _bloc.add(ProfileListEvent(page: _page, name: s));
   }
 
   @override
@@ -78,9 +93,6 @@ class _ProfileListPageState extends State<ProfileListPage> {
     return BlocListener(
       bloc: _bloc,
       listener: (c, s) {
-        if(_onSearch) {
-          return;
-        }
         if (s is ProfileListSuccessState) {
           _onLoad = false;
           _page = s.page;
@@ -99,7 +111,7 @@ class _ProfileListPageState extends State<ProfileListPage> {
           }
           _error = ErrorModel(
             event: ProfileListEvent(page: s.page),
-            error: s.data.message.toString(),
+            error: "Failure to search '${s.name}'",
           );
         }
       },
@@ -108,19 +120,29 @@ class _ProfileListPageState extends State<ProfileListPage> {
         builder: (c, s) {
           return Scaffold(
             appBar: AppBar(
-              title: const Text("Data"),
-              actions: [
-                IconButton(
-                  onPressed: _search,
-                  icon: const Icon(Icons.search),
+              title: TextFormField(
+                maxLines: 1,
+                textInputAction: TextInputAction.search,
+                controller: _cSearch,
+                textCapitalization: TextCapitalization.words,
+                keyboardType: TextInputType.text,
+                onFieldSubmitted: (s) => _search(_SearchType.reset),
+                decoration: InputDecoration(
+                  hintText: "Search",
+                  hintStyle: const TextStyle(color: Colors.white),
+                  suffixIcon: IconButton(
+                    onPressed: () => _search(_SearchType.reset),
+                    icon: Icon(
+                      Icons.search,
+                      color: AppColor.primary,
+                    ),
+                  ),
                 ),
-              ],
+              ),
             ),
             body: SafeArea(
               child: SmartRefresher(
-                enablePullDown:
-                    (_error == null || (_error != null && _page > 0)) &&
-                        !_onLoad,
+                enablePullDown: !_onLoad,
                 enablePullUp: _error == null,
                 header: WaterDropMaterialHeader(
                   backgroundColor: AppColor.primary,
@@ -133,11 +155,8 @@ class _ProfileListPageState extends State<ProfileListPage> {
                   ),
                 ),
                 controller: _cRefresh,
-                onRefresh: _onRefresh,
-                onLoading: () => setState(() {
-                  _getData(_page + 1);
-                  _cRefresh.loadComplete();
-                }),
+                onRefresh: () => _search(_SearchType.reset),
+                onLoading: () => _search(_SearchType.next),
                 child: _stateView(),
               ),
             ),
@@ -168,8 +187,8 @@ class _ProfileListPageState extends State<ProfileListPage> {
         children: [
           Expanded(
             child: ReloadDataWidget(
-              error: "Unable to load data",
-              onReload: _onRefresh,
+              error: _error?.error ?? "Unable load data",
+              onReload: () => _search(_SearchType.current),
             ),
           ),
         ],
@@ -180,16 +199,20 @@ class _ProfileListPageState extends State<ProfileListPage> {
   }
 
   Widget _mainView() {
-    if (_data?.isEmpty ?? true) {
-      return const Center(
-        child: Text("No data yet"),
+    if ((_data?.isEmpty ?? true)) {
+      return Center(
+        child: Text(
+          _cSearch.text.trim().isEmpty
+              ? "Type something\nfor search user by name"
+              : "No data yet",
+          textAlign: TextAlign.center,
+        ),
       );
     }
 
     double imageSize = 100.0;
     int gridCount = (MediaQuery.of(context).size.width - 152) ~/ imageSize;
     return GridView.builder(
-      controller: widget.scrollController,
       itemCount: _data?.length ?? 0,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -256,3 +279,5 @@ class _ProfileListPageState extends State<ProfileListPage> {
     );
   }
 }
+
+enum _SearchType { reset, current, next }
